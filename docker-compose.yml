@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+   home-assistant:
+        container_name: homeassistant
+        privileged: true
+        restart: unless-stopped
+        environment:
+            - TZ=Europe/London
+        volumes:
+            - '/media/config/homeassistant:/config'
+        network_mode: host
+        image: 'ghcr.io/home-assistant/raspberrypi4-homeassistant:stable'
+        healthcheck:
+            interval: 1m
+            retries: 3
+            start_period: 30s
+            test:
+                - CMD
+                - wget
+                - '--no-verbose'
+                - '--tries=1'
+                - '--spider'
+                - http://192.168.8.4:8123/
+            timeout: 20s
